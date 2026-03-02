@@ -29,7 +29,6 @@
 }
 
 html {
-    scroll-behavior: smooth;
     overflow-x: hidden;
 }
 
@@ -79,9 +78,9 @@ body {
     transform: translate(-50%, -50%);
     pointer-events: none;
     z-index: 9999;
-    transition: width 0.3s var(--transition), 
-                height 0.3s var(--transition),
-                background-color 0.3s var(--transition);
+    transition: width 0.2s ease-out, 
+                height 0.2s ease-out,
+                background-color 0.2s ease-out;
     mix-blend-mode: difference; 
 }
 

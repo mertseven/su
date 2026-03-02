@@ -6,10 +6,11 @@ const cursor = document.getElementById('cursor');
 function updateHoverTargets() {
     const hoverTargets = document.querySelectorAll('.hover-target, a, button, .pub-item, .game-card');
     hoverTargets.forEach(target => {
-        target.removeEventListener('mouseenter', cursorActive);
-        target.removeEventListener('mouseleave', cursorInactive);
-        target.addEventListener('mouseenter', cursorActive);
-        target.addEventListener('mouseleave', cursorInactive);
+        if (!target.dataset.cursorBound) {
+            target.addEventListener('mouseenter', cursorActive);
+            target.addEventListener('mouseleave', cursorInactive);
+            target.dataset.cursorBound = "true";
+        }
     });
 }
 
@@ -25,8 +26,8 @@ document.addEventListener('mousemove', (e) => {
 });
 
 function animateCursor() {
-    cursorX += (mouseX - cursorX) * 0.15;
-    cursorY += (mouseY - cursorY) * 0.15;
+    cursorX += (mouseX - cursorX) * 0.35;
+    cursorY += (mouseY - cursorY) * 0.35;
     cursor.style.left = `${cursorX}px`;
     cursor.style.top = `${cursorY}px`;
     requestAnimationFrame(animateCursor);
@@ -210,6 +211,51 @@ function getNetworkOptions(isDark) {
 }
 
 network = new vis.Network(container, data, getNetworkOptions(false));
+
+// NODE SELECTION FILTERING
+network.on("selectNode", function (params) {
+    if (params.nodes.length > 0) {
+        const nodeId = params.nodes[0];
+        const selectedNode = nodes.get(nodeId);
+        const category = selectedNode.category;
+
+        // Sync with filter buttons
+        filterBtns.forEach(btn => {
+            if (btn.getAttribute('data-filter') === category) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // Filter publications
+        pubItems.forEach(item => {
+            if (category === 'all' || item.classList.contains(category)) {
+                item.classList.remove('fade-out');
+                item.style.display = 'grid';
+            } else {
+                item.classList.add('fade-out');
+                setTimeout(() => { if(item.classList.contains('fade-out')) item.style.display = 'none'; }, 500);
+            }
+        });
+    }
+});
+
+network.on("deselectNode", function () {
+    // Reset to 'all'
+    filterBtns.forEach(btn => {
+        if (btn.getAttribute('data-filter') === 'all') {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    pubItems.forEach(item => {
+        item.classList.remove('fade-out');
+        item.style.display = 'grid';
+    });
+});
 
 // ZOOM LOGIC FOR MOBILE
 network.once("stabilizationIterationsDone", function () {
