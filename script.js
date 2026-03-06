@@ -364,6 +364,14 @@ const projectDetails = {
         tech: ["GSAP", "HTML5", "PhD Framework", "Marketing Psychology"],
         link: "lab.html"
     },
+    killcampaign: {
+        title: "Kill the Campaign",
+        category: "Serious Game // LIVE",
+        description: "A workshop-based serious game designed to train strategic thinking by deconstructing successful historical campaigns through modern cultural challenges.",
+        methodology: "Gamifies strategic critique through randomized constraints, encouraging students to identify strategic vulnerabilities without relying on subjective opinions.",
+        tech: ["Strategy", "Serious Games", "Deconstruction", "Classroom Toolkit"],
+        link: "kill-campaign-test.html"
+    },
     crisis: {
         title: "PR Crisis Simulator",
         category: "Serious Game",
